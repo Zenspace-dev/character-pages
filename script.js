@@ -1,15 +1,15 @@
-let page = 2;
+let page = 1;
 
 // get DOM elements
 const statusText = document.getElementById("status");
 const results = document.getElementById("results");
-const pageLabel = document.getElementById("pageLabel");
+const pageLabel = document.getElementById("page-label");
 const prevButton = document.getElementById("prev-btn");
 const nextButton = document.getElementById("next-btn");
 
 async function LoadPage() {
     try {
-        const url = `https://rickandmortyapi.com/api/character?page=`
+        const url = `https://rickandmortyapi.com/api/character?page=${page}`;
         results.textContent = "";
 
         statusText.textContent = "Loading...";
@@ -17,12 +17,17 @@ async function LoadPage() {
         const response = await fetch(url);
         
         if(!response.ok) {
-            statusText.textContent `Something went wrong (${response.status})`
+            statusText.textContent = `Something went wrong (${response.status})`;
             return;
         }
 
         const data = await response.json();
         console.log(data);
+        let totalPages = Math.ceil(data.info.count / 20);
+        console.log(totalPages);
+        pageLabel.textContent = `Page ${page} of ${totalPages}`;
+        nextButton.disable = page === 42;
+        prevButton.disable = page === 1;
 
         statusText.textContent = "";
 
